@@ -1,0 +1,42 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: servidor-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: microservicios-flights
+        #lb:// cuando se va a acceder a través de Eureka
+        uri: lb://microservicios-flights #http://localhost:8081
+        predicates:
+        - Path=/sfligths/**
+        filters:
+        - RewritePath=/sfligths/*, /
+        #llamada con gateway: http://localhost:7000/sfligths/apirest/flights/1
+        #llamada sin gateway: http://localhost:8081/apirest/flights/1
+
+      - id: microservicios-hotels
+        #lb:// cuando se va a acceder a través de Eureka
+        uri: lb://microservicios-hotels #http://localhost:8080
+        predicates:
+        - Path=/shoteles/**
+        filters:
+        - RewritePath=/shoteles/*, /
+        #llamada con gateway: http://localhost:7000/shoteles/apirest/hotels
+        #llamada sin gateway: http://localhost:8080/apirest/hotels
+
+      - id: microservicios-bookings
+        #lb:// cuando se va a acceder a través de Eureka
+        uri: lb://microservicios-bookings #http://localhost:8082
+        predicates:
+        - Path=/sbookings/**
+        filters:
+        - RewritePath=/sbookings/*, /
+        #llamada con gateway: http://localhost:7000/sbookings/apirest/bookings
+        #llamada sin gateway: http://localhost:8082/apirest/bookings
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
